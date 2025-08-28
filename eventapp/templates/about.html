@@ -1,0 +1,92 @@
+{% load static %}
+
+<!-- About Us Section -->
+<div class="about-section" id="aboutSection">
+  <h1>Aurora Events</h1>
+  <h2>Crafting Moments, Creating Memories</h2>
+  
+  <p>
+    At <strong>Aurora Events</strong>, we believe every moment deserves to be extraordinary. 
+    From elegant weddings to impactful corporate conferences, our team brings your vision 
+    to life with <em>creativity</em>, <em>precision</em>, and <em>passion</em>.
+  </p>
+
+  <ul>
+    <li>📍 Based in Calicut</li>
+    <li>✨ Over 5 years of proven experience</li>
+    <li>🎯 Dedicated team ensuring every detail is flawless</li>
+    <li>🤝 Trusted by clients for creating lasting memories</li>
+  </ul>
+
+  <p>
+    Let’s craft your story together — <a href="/contact" class="highlight">Get in Touch</a>.
+  </p>
+</div>
+
+<!-- CSS Styling -->
+<style>
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+
+    /* 🔹 Full-screen background image */
+    background: url("{% static 'images/img11.jpg' %}") center/cover no-repeat fixed;
+    min-height: 100vh;
+  }
+
+  /* Dark overlay on top of background (optional) */
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5); /* dim effect */
+    z-index: 1;
+  }
+
+  .about-section {
+    text-align: center;
+    max-width: 850px;
+    margin: 80px auto;
+    padding: 40px;
+    line-height: 1.8;
+
+    background: rgba(255, 255, 255, 0.1); /* transparent box */
+    backdrop-filter: blur(6px); /* glass effect */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    position: relative;
+    z-index: 2; /* above overlay */
+    color: white;
+  }
+
+  .about-section h1, 
+  .about-section h2, 
+  .about-section p, 
+  .about-section ul li {
+    color: #fff;
+  }
+
+  .about-section .highlight {
+    color: #ffd700;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .about-section .highlight:hover {
+    color: #ffae00;
+  }
+</style>
+<!-- JS for Outside Click -->
+<script>
+  document.addEventListener("click", function(e) {
+    const aboutSection = document.getElementById("aboutSection");
+    // if click is outside aboutSection, go home
+    if (!aboutSection.contains(e.target)) {
+      window.location.href = "/"; 
+    }
+  });
+</script>

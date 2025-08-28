@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<h2 class="text-center">Events</h2>
+
+<div class="container">
+  {% for i in eve %}
+  <div class="card text-center" style="width: 20rem; display:inline-block; margin: 20px;">
+    <!-- Main Event Image (uses data-*; no risky inline JS strings) -->
+    <img
+      src="{{ i.img.url }}"
+      class="card-img-top event-img"
+      alt="{{ i.name|default:'Event' }}"
+      height="150" width="200"
+      data-event-id="{{ i.id }}"
+      data-title="{{ i.name|escape }}"
+      data-desc="{{ i.desc|escape }}"
+      onclick="openModal(this)" />
+
+    <div class="card-body">
+      <h5 class="card-title">{{ i.name }}</h5>
+      <p class="card-text">{{ i.desc }}</p>
+    </div>
+
+    <!-- Hidden Sub Images for this event -->
+    <div id="subImages-{{ i.id }}" style="display:none;">
+      {% for sub in i.photos.all %}
+        <img src="{{ sub.image.url }}" alt="sub of {{ i.name|escape }}">
+      {% empty %}
+        <!-- keep empty; JS will handle 'no extra photos' -->
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Modal (single instance) -->
+<div id="imgModal" class="modal" aria-hidden="true">
+  <span class="close" onclick="closeModal()" aria-label="Close">&times;</span>
+  <img class="modal-content" id="modalImage" alt="">
+  <div id="caption"></div>
+  <div id="subGallery" class="sub-images" aria-label="More photos"></div>
+</div>
+
+<style>
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,.8);
+}
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 80%;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.25);
+}
+#caption {
+  margin: 15px auto;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  max-width: 80%;
+}
+.close {
+  position: absolute;
+  top: 15px;
+  right: 30px;
+  color: #fff;
+  font-size: 35px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.close:hover { color: #ccc; }
+
+.sub-images {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  padding: 10px 12px 25px;
+  margin: 0 auto;
+  max-width: 85%;
+  justify-content: center;
+}
+.sub-images img {
+  width: 80px;
+  height: 80px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  cursor: pointer;
+  object-fit: cover;
+  transition: transform .2s;
+}
+.sub-images img:hover { transform: scale(1.06); }
+</style>
+
+<script>
+function openModal(el) {
+  var modal = document.getElementById("imgModal");
+  var modalImg = document.getElementById("modalImage");
+  var caption = document.getElementById("caption");
+  var subGallery = document.getElementById("subGallery");
+
+  // Read safe values from data-attributes
+  var eventId = el.dataset.eventId;
+  var title = el.dataset.title || "";
+  var desc  = el.dataset.desc  || "";
+  var imgSrc = el.getAttribute("src");
+
+  // Show modal
+  modal.style.display = "block";
+  modal.setAttribute("aria-hidden", "false");
+  modalImg.src = imgSrc;
+  caption.innerHTML = "<h3 style='margin:6px 0'>" + title + "</h3><p style='margin:0'>" + desc + "</p>";
+
+  // Build thumbnails from hidden images of this event
+  subGallery.innerHTML = ""; // clear old
+  var subImgs = document.querySelectorAll("#subImages-" + eventId + " img");
+
+  // If there are no extra photos, show a subtle note
+  if (!subImgs || subImgs.length === 0) {
+    var note = document.createElement("div");
+    note.style.color = "#bbb";
+    note.style.textAlign = "center";
+    note.style.margin = "10px auto 20px";
+    note.textContent = "No additional photos.";
+    subGallery.appendChild(note);
+    return;
+  }
+
+  subImgs.forEach(function(img) {
+    var thumb = document.createElement("img");
+    thumb.src = img.src;
+    thumb.alt = img.alt || "sub image";
+    thumb.onclick = function() {
+      modalImg.src = img.src;
+    };
+    subGallery.appendChild(thumb);
+  });
+}
+
+function closeModal() {
+  var modal = document.getElementById("imgModal");
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+}
+
+// Close on outside click
+window.onclick = function(event) {
+  var modal = document.getElementById("imgModal");
+  if (event.target === modal) closeModal();
+};
+
+// Close on Escape
+window.addEventListener("keydown", function(e) {
+  if (e.key === "Escape") closeModal();
+});
+</script>
+{% endblock %}
+
+
+<!-- Hidden Sub Images for Modal -->
+<div id="subImages-{{ i.id }}" style="display:none;">
+  {% for sub in i.images.all %}
+    <img src="{{ sub.image.url }}" data-event="{{ i.id }}">
+  {% endfor %}
+</div>

@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="{% static 'css/styleuser.css' %}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    /* 🔹 Background Image */
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+      background: url("{% static 'images/img13.jpg' %}") no-repeat center center/cover;
+    }
+
+    .container {
+      background: rgba(0, 0, 0, 0.7); /* dark overlay */
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+      width: 400px;
+      text-align: center;
+      color: #fff;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+
+    .input-box {
+      margin: 15px 0;
+      text-align: left;
+    }
+
+    .input-box label {
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .button input {
+      width: 20%;
+      padding: 8px 0;
+      background: #050508ff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s;
+      margin-top: 15px;
+    }
+
+    .button input:hover {
+      background: #0e0e10ff;
+    }
+
+    /* Responsive */
+    @media (max-width: 420px) {
+      .container {
+        width: 90%;
+        padding: 25px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Registration</div>
+    <div class="content">
+      <form action="{% url 'register' %}" method="post">
+        {% csrf_token %}
+        <div class="user-details">
+
+          <div class="input-box">
+            <label>User Name :</label>
+            <input type="text" name="username" required>
+          </div>
+
+          <div class="input-box">
+            <label>E-Mail ID :</label>
+            <input type="email" name="email" required>
+          </div>
+
+          <div class="input-box">
+            <label>Password :</label>
+            <input type="password" name="password" required>
+          </div>
+
+          <div class="input-box">
+            <label>Confirm Password :</label>
+            <input type="password" name="confirmpassword" required>
+          </div>
+
+        </div>
+        <div class="button">
+          <input type="submit" name="submit" value="Sign Up">
+        </div>
+      </form>
+
+      <!-- Django messages -->
+      <div>
+        {% for message in messages %}
+          <script>alert('{{ message }}');</script>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>
